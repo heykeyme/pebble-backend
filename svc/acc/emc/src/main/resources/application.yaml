@@ -1,3 +1,9 @@
 spring:
   application:
-    name: app
+    name: emc
+
+  datasource:
+    url: ${EMC_DB_URL}
+    username: ${EMC_DB_USERNAME}
+    password: ${EMC_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
