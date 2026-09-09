@@ -15,15 +15,27 @@ to-do-list-app/
 ├── pom.xml                  # parent aggregator (packaging=pom) — Spring Boot version mgmt, lists modules
 ├── mvnw, mvnw.cmd           # Maven wrapper (no local Maven install required)
 ├── .mvn/wrapper/            # wrapper config
+├── libs/                    # shared library modules, depended on by services
+│   └── common/              # ApiResponse<T> / ApiError — shared response & error envelopes
+│       ├── pom.xml              # plain jar module, spring-boot-maven-plugin repackaging skipped
+│       └── src/main/java/com/todo/common/
+│           ├── dtos/            # ApiResponse.java
+│           └── errors/          # ApiError.java
 └── svc/                     # one Maven module per microservice, grouped by domain
     └── acc/
         └── emc/             # email checker service
-            ├── pom.xml          # module POM, inherits from the root parent
+            ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
             ├── Dockerfile       # placeholder — not yet written
             ├── .env.example     # reference env vars; copy to .env for local dev
             └── src/
                 ├── main/
-                │   ├── java/com/todo/app/EmailCheckerApplication.java
+                │   ├── java/com/todo/emc/
+                │   │   ├── EmailCheckerApplication.java
+                │   │   ├── controllers/     # EmailCheckController.java
+                │   │   ├── dtos/            # EmailCheckResponse.java
+                │   │   ├── entity/          # User.java
+                │   │   ├── repositories/    # EmailCheckerRepository.java
+                │   │   └── services/        # EmailCheckService.java
                 │   └── resources/application.yaml
                 └── test/
                     └── java/com/todo/app/AppApplicationTests.java
@@ -57,11 +69,12 @@ Run a single service:
 ./mvnw -pl svc/acc/emc spring-boot:run
 ```
 
-## Services
+## Modules
 
-| Path | Module | Stack | Purpose |
+| Path | Module | Type | Purpose |
 |---|---|---|---|
-| `svc/acc/emc` | `emc` | Spring Web, Spring Data JPA, PostgreSQL | Email checker |
+| `libs/common` | `common` | plain jar | Shared DTOs and error types used by every service (`ApiResponse<T>`, `ApiError`). Not repackaged as an executable jar — it exists purely to be depended on. |
+| `svc/acc/emc` | `emc` | Spring Boot app | Email checker service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, and the PostgreSQL driver. |
 
 ### `emc` environment variables
 
@@ -76,3 +89,4 @@ Run a single service:
 1. Create `svc/<domain>/<service>/` with its own `pom.xml`, parented to the root `com.todo:todo-list-app`.
 2. Register the new module path in the root `pom.xml`'s `<modules>` list.
 3. Add a `.env.example` documenting any required environment variables.
+4. Depend on `com.todo:common:${project.version}` to reuse `ApiResponse<T>` / `ApiError` for consistent response shapes.

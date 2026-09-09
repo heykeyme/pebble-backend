@@ -1,10 +1,10 @@
-package com.todo.app;
+package com.todo.emc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AppApplicationTests {
+class EmailCheckerApplicationTests {
 
 	@Test
 	void contextLoads() {
