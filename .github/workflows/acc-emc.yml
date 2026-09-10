@@ -1,0 +1,49 @@
+name: deploy acc-emc-service
+
+on:
+  push:
+    tags:
+      - 'acc-emc-v*'
+
+jobs: 
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5 #change to v5 when it is released
+
+      - name: Authenticate to google cloud
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{secrets.GCP_SA_KEY}}
+          project_id: ${{vars.GCP_PROJECT_ID}}
+      
+      - name: Set up google cloud
+        uses: google-github-actions/setup-gcloud@v3
+        with:
+          project_id: ${{vars.GCP_PROJECT_ID}}
+
+      - name: Build and push docker image
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+
+          gcloud builds submit . \
+            --config cloudbuild/acc-emc.yaml \
+            --substitutions=_VERSION=$VERSION,_PROJECT_ID=${{vars.GCP_PROJECT_ID}},_REPO_NAME=anthelope-acc,_IMAGE_NAME=acc-emc \
+            --project ${{vars.GCP_PROJECT_ID}}
+      
+      - name: Deploy to google cloud run
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+
+          gcloud run deploy acc-emc \
+            --image asia-southeast1-docker.pkg.dev/${{vars.GCP_PROJECT_ID}}/anthelope-acc/acc-emc:${VERSION} \
+            --region asia-southeast1 \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars="
+              EMC_DB_URL=${{vars.EMC_DB_URL}},
+              EMC_DB_USERNAME=${{vars.EMC_DB_USERNAME}},
+              EMC_DB_PASSWORD=${{secrets.EMC_DB_PASSWORD}}"
+            --project ${{vars.GCP_PROJECT_ID}}
+              
