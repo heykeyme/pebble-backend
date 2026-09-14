@@ -4,9 +4,10 @@ A to-do list application built as a set of independently deployable microservice
 
 ## Status
 
-Early scaffold. One service exists so far:
+Early scaffold. Two services exist so far:
 
-- **`svc/acc/emc`** — email checker service. Has a Spring Boot app, a Postgres datasource wired up via env vars, and a placeholder test. No REST endpoints or business logic yet.
+- **`svc/acc/emc`** — email checker service. Has a Spring Boot app, a Postgres datasource wired up via env vars, and a placeholder test, plus a working `GET /api/v1/auth/email/check` endpoint.
+- **`svc/acc/rqc`** — request code service. Scaffolding only (Spring Boot app, Postgres datasource wired up via env vars, placeholder test). No REST endpoints or business logic yet.
 
 ## Project structure
 
@@ -23,22 +24,33 @@ to-do-list-app/
 │           └── errors/          # ApiError.java
 └── svc/                     # one Maven module per microservice, grouped by domain
     └── acc/
-        └── emc/             # email checker service
+        ├── emc/             # email checker service
+        │   ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
+        │   ├── Dockerfile
+        │   ├── .env.example     # reference env vars; copy to .env for local dev
+        │   └── src/
+        │       ├── main/
+        │       │   ├── java/com/todo/emc/
+        │       │   │   ├── EmailCheckerApplication.java
+        │       │   │   ├── controllers/     # EmailCheckController.java
+        │       │   │   ├── dtos/            # EmailCheckResponse.java
+        │       │   │   ├── entity/          # User.java
+        │       │   │   ├── repositories/    # EmailCheckerRepository.java
+        │       │   │   └── services/        # EmailCheckService.java
+        │       │   └── resources/application.yaml
+        │       └── test/
+        │           └── java/com/todo/emc/EmailCheckerApplicationTests.java
+        └── rqc/             # request code service (scaffolding only, no endpoints yet)
             ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
-            ├── Dockerfile       # placeholder — not yet written
+            ├── Dockerfile
             ├── .env.example     # reference env vars; copy to .env for local dev
             └── src/
                 ├── main/
-                │   ├── java/com/todo/emc/
-                │   │   ├── EmailCheckerApplication.java
-                │   │   ├── controllers/     # EmailCheckController.java
-                │   │   ├── dtos/            # EmailCheckResponse.java
-                │   │   ├── entity/          # User.java
-                │   │   ├── repositories/    # EmailCheckerRepository.java
-                │   │   └── services/        # EmailCheckService.java
+                │   ├── java/com/todo/rqc/
+                │   │   └── RequestCodeApplication.java
                 │   └── resources/application.yaml
                 └── test/
-                    └── java/com/todo/app/AppApplicationTests.java
+                    └── java/com/todo/rqc/RequestCodeApplicationTests.java
 ```
 
 ## Prerequisites
@@ -75,6 +87,7 @@ Run a single service:
 |---|---|---|---|
 | `libs/common` | `common` | plain jar | Shared DTOs and error types used by every service (`ApiResponse<T>`, `ApiError`). Not repackaged as an executable jar — it exists purely to be depended on. |
 | `svc/acc/emc` | `emc` | Spring Boot app | Email checker service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, and the PostgreSQL driver. |
+| `svc/acc/rqc` | `rqc` | Spring Boot app | Request code service. Same dependency set as `emc`, plus `spring-boot-starter-data-redis`. Scaffolding only — no controllers/services/entities yet. |
 
 ### `emc` environment variables
 
@@ -83,6 +96,19 @@ Run a single service:
 | `EMC_DB_URL` | JDBC URL of the PostgreSQL database |
 | `EMC_DB_USERNAME` | Database username |
 | `EMC_DB_PASSWORD` | Database password |
+| `EMC_SERVER_PORT` | Port the service listens on |
+
+### `rqc` environment variables
+
+| Variable | Description |
+|---|---|
+| `RQC_DB_URL` | JDBC URL of the PostgreSQL database |
+| `RQC_DB_USERNAME` | Database username |
+| `RQC_DB_PASSWORD` | Database password |
+| `RQC_REDIS_HOST` | Redis host |
+| `RQC_REDIS_PORT` | Redis port |
+| `RQC_REDIS_PASSWORD` | Redis password |
+| `RQC_SERVER_PORT` | Port the service listens on |
 
 ## Adding a new service
 

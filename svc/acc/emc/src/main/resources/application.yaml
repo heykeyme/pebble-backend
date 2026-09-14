@@ -7,3 +7,6 @@ spring:
     username: ${EMC_DB_USERNAME}
     password: ${EMC_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+server:
+  port: ${EMC_SERVER_PORT}

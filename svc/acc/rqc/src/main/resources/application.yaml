@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: rqc
+
+  datasource:
+    url: ${RQC_DB_URL}
+    username: ${RQC_DB_USERNAME}
+    password: ${RQC_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  data:
+    redis:
+      host: ${RQC_REDIS_HOST}
+      port: ${RQC_REDIS_PORT}
+      password: ${RQC_REDIS_PASSWORD}
+
+server:
+  port: ${RQC_SERVER_PORT}
