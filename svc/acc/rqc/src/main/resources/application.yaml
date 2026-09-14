@@ -14,5 +14,15 @@ spring:
       port: ${RQC_REDIS_PORT}
       password: ${RQC_REDIS_PASSWORD}
 
+  rabbitmq:
+    host: ${RQC_RABBITMQ_HOST}
+    port: ${RQC_RABBITMQ_PORT}
+    username: ${RQC_RABBITMQ_USERNAME}
+    password: ${RQC_RABBITMQ_PASSWORD}
+
+app:
+  otp:
+    ttl-minutes: 5
+
 server:
   port: ${RQC_SERVER_PORT}
