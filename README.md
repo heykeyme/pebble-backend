@@ -108,6 +108,51 @@ to-do-list-app/
                 │   └── resources/application.yaml
                 └── test/
                     └── java/com/todo/lgi/LoginApplicationTests.java
+    └── tsk/
+        ├── nitm/            # new item (create task) service (scaffold only)
+        │   ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
+        │   ├── Dockerfile
+        │   ├── .env.example     # reference env vars; copy to .env for local dev
+        │   └── src/
+        │       ├── main/
+        │       │   ├── java/com/todo/nitm/
+        │       │   │   └── NewItemApplication.java
+        │       │   └── resources/application.yaml
+        │       └── test/
+        │           └── java/com/todo/nitm/NewItemApplicationTests.java
+        ├── eitm/            # edit item (edit task) service (scaffold only)
+        │   ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
+        │   ├── Dockerfile
+        │   ├── .env.example     # reference env vars; copy to .env for local dev
+        │   └── src/
+        │       ├── main/
+        │       │   ├── java/com/todo/eitm/
+        │       │   │   └── EditItemApplication.java
+        │       │   └── resources/application.yaml
+        │       └── test/
+        │           └── java/com/todo/eitm/EditItemApplicationTests.java
+        ├── ditm/            # delete item (delete task) service (scaffold only)
+        │   ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
+        │   ├── Dockerfile
+        │   ├── .env.example     # reference env vars; copy to .env for local dev
+        │   └── src/
+        │       ├── main/
+        │       │   ├── java/com/todo/ditm/
+        │       │   │   └── DeleteItemApplication.java
+        │       │   └── resources/application.yaml
+        │       └── test/
+        │           └── java/com/todo/ditm/DeleteItemApplicationTests.java
+        └── gitm/            # get item (list tasks) service (scaffold only)
+            ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
+            ├── Dockerfile
+            ├── .env.example     # reference env vars; copy to .env for local dev
+            └── src/
+                ├── main/
+                │   ├── java/com/todo/gitm/
+                │   │   └── GetItemApplication.java
+                │   └── resources/application.yaml
+                └── test/
+                    └── java/com/todo/gitm/GetItemApplicationTests.java
     └── notif/
         └── nwk/             # notification worker service (RabbitMQ consumer, no REST API)
             ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
@@ -165,6 +210,10 @@ Run a single service:
 | `svc/acc/rqc` | `rqc` | Spring Boot app | Request code service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa` + PostgreSQL driver (email-registered lookup), `spring-boot-starter-data-redis` (OTP cache), `spring-boot-starter-amqp` (publishes to RabbitMQ), `spring-boot-starter-validation`. |
 | `svc/acc/lgo` | `lgo` | Spring Boot app | Logout service (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
 | `svc/acc/lgi` | `lgi` | Spring Boot app | Login service (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
+| `svc/tsk/nitm` | `nitm` | Spring Boot app | New item service — creates a task (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
+| `svc/tsk/eitm` | `eitm` | Spring Boot app | Edit item service — edits a task (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
+| `svc/tsk/ditm` | `ditm` | Spring Boot app | Delete item service — deletes a task (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
+| `svc/tsk/gitm` | `gitm` | Spring Boot app | Get item service — lists tasks (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
 | `svc/notif/nwk` | `nwk` | Spring Boot app (no web) | Notification worker. Depends on `common`, `spring-boot-starter-amqp` (consumes from RabbitMQ), `spring-boot-starter-mail` (sends via SMTP). |
 
 ### `emc` environment variables
@@ -203,6 +252,30 @@ Run a single service:
 | Variable | Description |
 |---|---|
 | `LGI_SERVER_PORT` | Port the service listens on |
+
+### `nitm` environment variables
+
+| Variable | Description |
+|---|---|
+| `NITM_SERVER_PORT` | Port the service listens on |
+
+### `eitm` environment variables
+
+| Variable | Description |
+|---|---|
+| `EITM_SERVER_PORT` | Port the service listens on |
+
+### `ditm` environment variables
+
+| Variable | Description |
+|---|---|
+| `DITM_SERVER_PORT` | Port the service listens on |
+
+### `gitm` environment variables
+
+| Variable | Description |
+|---|---|
+| `GITM_SERVER_PORT` | Port the service listens on |
 
 ### `nwk` environment variables
 

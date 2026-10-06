@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: gitm
+
+server:
+  port: ${GITM_SERVER_PORT}

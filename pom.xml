@@ -37,6 +37,10 @@
 		<module>svc/acc/rqc</module>
 		<module>svc/acc/lgo</module>
 		<module>svc/acc/lgi</module>
+		<module>svc/tsk/nitm</module>
+		<module>svc/tsk/eitm</module>
+		<module>svc/tsk/ditm</module>
+		<module>svc/tsk/gitm</module>
 		<module>svc/notif/nwk</module>
 	</modules>
 

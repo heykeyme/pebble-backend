@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: ditm
+
+server:
+  port: ${DITM_SERVER_PORT}

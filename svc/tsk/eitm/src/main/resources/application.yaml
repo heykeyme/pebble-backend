@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: eitm
+
+server:
+  port: ${EITM_SERVER_PORT}

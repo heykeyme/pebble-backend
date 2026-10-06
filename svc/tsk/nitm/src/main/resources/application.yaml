@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: nitm
+
+server:
+  port: ${NITM_SERVER_PORT}
