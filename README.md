@@ -86,6 +86,17 @@ to-do-list-app/
                 │   └── resources/application.yaml
                 └── test/
                     └── java/com/todo/rqc/RequestCodeApplicationTests.java
+        └── lgo/             # logout service (scaffold only)
+            ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
+            ├── Dockerfile
+            ├── .env.example     # reference env vars; copy to .env for local dev
+            └── src/
+                ├── main/
+                │   ├── java/com/todo/lgo/
+                │   │   └── LogoutApplication.java
+                │   └── resources/application.yaml
+                └── test/
+                    └── java/com/todo/lgo/LogoutApplicationTests.java
     └── notif/
         └── nwk/             # notification worker service (RabbitMQ consumer, no REST API)
             ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
@@ -141,6 +152,7 @@ Run a single service:
 | `libs/common` | `common` | plain jar | Shared DTOs, error types, and event/messaging contracts used by every service (`ApiResponse<T>`, `ApiError`, `SendOtpEmailEvent`, `NotificationRouting`). Not repackaged as an executable jar — it exists purely to be depended on. |
 | `svc/acc/emc` | `emc` | Spring Boot app | Email checker service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, and the PostgreSQL driver. |
 | `svc/acc/rqc` | `rqc` | Spring Boot app | Request code service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa` + PostgreSQL driver (email-registered lookup), `spring-boot-starter-data-redis` (OTP cache), `spring-boot-starter-amqp` (publishes to RabbitMQ), `spring-boot-starter-validation`. |
+| `svc/acc/lgo` | `lgo` | Spring Boot app | Logout service (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
 | `svc/notif/nwk` | `nwk` | Spring Boot app (no web) | Notification worker. Depends on `common`, `spring-boot-starter-amqp` (consumes from RabbitMQ), `spring-boot-starter-mail` (sends via SMTP). |
 
 ### `emc` environment variables
@@ -167,6 +179,12 @@ Run a single service:
 | `RQC_RABBITMQ_USERNAME` | RabbitMQ username |
 | `RQC_RABBITMQ_PASSWORD` | RabbitMQ password |
 | `RQC_SERVER_PORT` | Port the service listens on |
+
+### `lgo` environment variables
+
+| Variable | Description |
+|---|---|
+| `LGO_SERVER_PORT` | Port the service listens on |
 
 ### `nwk` environment variables
 
