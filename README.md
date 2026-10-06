@@ -68,35 +68,46 @@ to-do-list-app/
         │       │   └── resources/application.yaml
         │       └── test/
         │           └── java/com/todo/emc/EmailCheckerApplicationTests.java
-        └── rqc/             # request code service
+        ├── rqc/             # request code service
+        │   ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
+        │   ├── Dockerfile
+        │   ├── .env.example     # reference env vars; copy to .env for local dev
+        │   └── src/
+        │       ├── main/
+        │       │   ├── java/com/todo/rqc/
+        │       │   │   ├── RequestCodeApplication.java
+        │       │   │   ├── config/          # RabbitMQConfig.java
+        │       │   │   ├── controllers/     # SendCodeController.java
+        │       │   │   ├── dtos/            # SendCodeRequest.java, SendCodeResponse.java
+        │       │   │   ├── entity/          # User.java (read-only lookup against the shared users table)
+        │       │   │   ├── exceptions/      # EmailAlreadyRegisteredException.java, GlobalExceptionHandler.java
+        │       │   │   ├── repositories/    # UserRepository.java
+        │       │   │   └── services/        # OtpService.java
+        │       │   └── resources/application.yaml
+        │       └── test/
+        │           └── java/com/todo/rqc/RequestCodeApplicationTests.java
+        ├── lgo/             # logout service (scaffold only)
+        │   ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
+        │   ├── Dockerfile
+        │   ├── .env.example     # reference env vars; copy to .env for local dev
+        │   └── src/
+        │       ├── main/
+        │       │   ├── java/com/todo/lgo/
+        │       │   │   └── LogoutApplication.java
+        │       │   └── resources/application.yaml
+        │       └── test/
+        │           └── java/com/todo/lgo/LogoutApplicationTests.java
+        └── lgi/             # login service (scaffold only)
             ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
             ├── Dockerfile
             ├── .env.example     # reference env vars; copy to .env for local dev
             └── src/
                 ├── main/
-                │   ├── java/com/todo/rqc/
-                │   │   ├── RequestCodeApplication.java
-                │   │   ├── config/          # RabbitMQConfig.java
-                │   │   ├── controllers/     # SendCodeController.java
-                │   │   ├── dtos/            # SendCodeRequest.java, SendCodeResponse.java
-                │   │   ├── entity/          # User.java (read-only lookup against the shared users table)
-                │   │   ├── exceptions/      # EmailAlreadyRegisteredException.java, GlobalExceptionHandler.java
-                │   │   ├── repositories/    # UserRepository.java
-                │   │   └── services/        # OtpService.java
+                │   ├── java/com/todo/lgi/
+                │   │   └── LoginApplication.java
                 │   └── resources/application.yaml
                 └── test/
-                    └── java/com/todo/rqc/RequestCodeApplicationTests.java
-        └── lgo/             # logout service (scaffold only)
-            ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
-            ├── Dockerfile
-            ├── .env.example     # reference env vars; copy to .env for local dev
-            └── src/
-                ├── main/
-                │   ├── java/com/todo/lgo/
-                │   │   └── LogoutApplication.java
-                │   └── resources/application.yaml
-                └── test/
-                    └── java/com/todo/lgo/LogoutApplicationTests.java
+                    └── java/com/todo/lgi/LoginApplicationTests.java
     └── notif/
         └── nwk/             # notification worker service (RabbitMQ consumer, no REST API)
             ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
@@ -153,6 +164,7 @@ Run a single service:
 | `svc/acc/emc` | `emc` | Spring Boot app | Email checker service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, and the PostgreSQL driver. |
 | `svc/acc/rqc` | `rqc` | Spring Boot app | Request code service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa` + PostgreSQL driver (email-registered lookup), `spring-boot-starter-data-redis` (OTP cache), `spring-boot-starter-amqp` (publishes to RabbitMQ), `spring-boot-starter-validation`. |
 | `svc/acc/lgo` | `lgo` | Spring Boot app | Logout service (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
+| `svc/acc/lgi` | `lgi` | Spring Boot app | Login service (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
 | `svc/notif/nwk` | `nwk` | Spring Boot app (no web) | Notification worker. Depends on `common`, `spring-boot-starter-amqp` (consumes from RabbitMQ), `spring-boot-starter-mail` (sends via SMTP). |
 
 ### `emc` environment variables
@@ -185,6 +197,12 @@ Run a single service:
 | Variable | Description |
 |---|---|
 | `LGO_SERVER_PORT` | Port the service listens on |
+
+### `lgi` environment variables
+
+| Variable | Description |
+|---|---|
+| `LGI_SERVER_PORT` | Port the service listens on |
 
 ### `nwk` environment variables
 

@@ -36,6 +36,7 @@
 		<module>svc/acc/emc</module>
 		<module>svc/acc/rqc</module>
 		<module>svc/acc/lgo</module>
+		<module>svc/acc/lgi</module>
 		<module>svc/notif/nwk</module>
 	</modules>
 
