@@ -1,6 +1,9 @@
 spring:
   application:
     name: emc
+  jpa:
+    hibernate:
+      ddl-auto: update
 
   datasource:
     url: ${EMC_DB_URL}

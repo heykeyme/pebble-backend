@@ -19,6 +19,7 @@ spring:
     port: ${RQC_RABBITMQ_PORT}
     username: ${RQC_RABBITMQ_USERNAME}
     password: ${RQC_RABBITMQ_PASSWORD}
+    virtual-host: ${RQC_RABBITMQ_VHOST}
 
 app:
   otp:
