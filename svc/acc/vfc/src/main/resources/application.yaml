@@ -2,5 +2,11 @@ spring:
   application:
     name: vfc
 
+  datasource:
+    url: ${VFC_DB_URL}
+    username: ${VFC_DB_USERNAME}
+    password: ${VFC_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
 server:
   port: ${VFC_SERVER_PORT}

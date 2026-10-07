@@ -86,14 +86,18 @@ to-do-list-app/
         │       │   └── resources/application.yaml
         │       └── test/
         │           └── java/com/todo/rqc/RequestCodeApplicationTests.java
-        ├── vfc/             # verify code service — verifies the email OTP (scaffold only)
+        ├── vfc/             # verify code service — verifies the email OTP
         │   ├── pom.xml          # module POM, inherits from the root parent, depends on `common`
         │   ├── Dockerfile
         │   ├── .env.example     # reference env vars; copy to .env for local dev
         │   └── src/
         │       ├── main/
         │       │   ├── java/com/todo/vfc/
-        │       │   │   └── VerifyCodeApplication.java
+        │       │   │   ├── VerifyCodeApplication.java
+        │       │   │   ├── controllers/     # VerifyCodeController.java
+        │       │   │   ├── dtos/            # VerifyCodeResponse.java
+        │       │   │   ├── entity/          # UserEntity.java (shared users table)
+        │       │   │   └── repositories/    # VerifyCodeRepository.java
         │       │   └── resources/application.yaml
         │       └── test/
         │           └── java/com/todo/vfc/VerifyCodeApplicationTests.java
@@ -219,7 +223,7 @@ Run a single service:
 | `libs/common` | `common` | plain jar | Shared DTOs, error types, and event/messaging contracts used by every service (`ApiResponse<T>`, `ApiError`, `SendOtpEmailEvent`, `NotificationRouting`). Not repackaged as an executable jar — it exists purely to be depended on. |
 | `svc/acc/emc` | `emc` | Spring Boot app | Email checker service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, and the PostgreSQL driver. |
 | `svc/acc/rqc` | `rqc` | Spring Boot app | Request code service. Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa` + PostgreSQL driver (email-registered lookup), `spring-boot-starter-data-redis` (OTP cache), `spring-boot-starter-amqp` (publishes to RabbitMQ), `spring-boot-starter-validation`. |
-| `svc/acc/vfc` | `vfc` | Spring Boot app | Verify code service — verifies the email OTP issued by `rqc` (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
+| `svc/acc/vfc` | `vfc` | Spring Boot app | Verify code service — verifies the email OTP issued by `rqc` (no endpoints yet). Depends on `common`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa` + PostgreSQL driver (shared `users` table). |
 | `svc/acc/lgo` | `lgo` | Spring Boot app | Logout service (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
 | `svc/acc/lgi` | `lgi` | Spring Boot app | Login service (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
 | `svc/tsk/nitm` | `nitm` | Spring Boot app | New item service — creates a task (scaffold only, no endpoints yet). Depends on `common` and `spring-boot-starter-web`. |
@@ -257,6 +261,9 @@ Run a single service:
 
 | Variable | Description |
 |---|---|
+| `VFC_DB_URL` | JDBC URL of the PostgreSQL database (same `users` table as `emc`/`rqc`) |
+| `VFC_DB_USERNAME` | Database username |
+| `VFC_DB_PASSWORD` | Database password |
 | `VFC_SERVER_PORT` | Port the service listens on |
 
 ### `lgo` environment variables
