@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: vfc
+
+server:
+  port: ${VFC_SERVER_PORT}
